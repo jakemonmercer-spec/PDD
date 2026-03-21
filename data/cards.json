@@ -1,0 +1,322 @@
+[
+  {
+    "questions": "0-19",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №1",
+      "en": "Билет №1"
+    }
+  },
+  {
+    "questions": "20-39",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №2",
+      "en": "Билет №2"
+    }
+  },
+  {
+    "questions": "40-59",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №3",
+      "en": "Билет №3"
+    }
+  },
+  {
+    "questions": "60-79",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №4",
+      "en": "Билет №4"
+    }
+  },
+  {
+    "questions": "80-99",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №5",
+      "en": "Билет №5"
+    }
+  },
+  {
+    "questions": "100-119",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №6",
+      "en": "Билет №6"
+    }
+  },
+  {
+    "questions": "120-139",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №7",
+      "en": "Билет №7"
+    }
+  },
+  {
+    "questions": "140-159",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №8",
+      "en": "Билет №8"
+    }
+  },
+  {
+    "questions": "160-179",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №9",
+      "en": "Билет №9"
+    }
+  },
+  {
+    "questions": "180-199",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №10",
+      "en": "Билет №10"
+    }
+  },
+  {
+    "questions": "200-219",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №11",
+      "en": "Билет №11"
+    }
+  },
+  {
+    "questions": "220-239",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №12",
+      "en": "Билет №12"
+    }
+  },
+  {
+    "questions": "240-259",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №13",
+      "en": "Билет №13"
+    }
+  },
+  {
+    "questions": "260-279",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №14",
+      "en": "Билет №14"
+    }
+  },
+  {
+    "questions": "280-299",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №15",
+      "en": "Билет №15"
+    }
+  },
+  {
+    "questions": "300-319",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №16",
+      "en": "Билет №16"
+    }
+  },
+  {
+    "questions": "320-339",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №17",
+      "en": "Билет №17"
+    }
+  },
+  {
+    "questions": "340-359",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №18",
+      "en": "Билет №18"
+    }
+  },
+  {
+    "questions": "360-379",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №19",
+      "en": "Билет №19"
+    }
+  },
+  {
+    "questions": "380-399",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №20",
+      "en": "Билет №20"
+    }
+  },
+  {
+    "questions": "400-419",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №21",
+      "en": "Билет №21"
+    }
+  },
+  {
+    "questions": "420-439",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №22",
+      "en": "Билет №22"
+    }
+  },
+  {
+    "questions": "440-459",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №23",
+      "en": "Билет №23"
+    }
+  },
+  {
+    "questions": "460-479",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №24",
+      "en": "Билет №24"
+    }
+  },
+  {
+    "questions": "480-499",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №25",
+      "en": "Билет №25"
+    }
+  },
+  {
+    "questions": "500-519",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №26",
+      "en": "Билет №26"
+    }
+  },
+  {
+    "questions": "520-539",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №27",
+      "en": "Билет №27"
+    }
+  },
+  {
+    "questions": "540-559",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №28",
+      "en": "Билет №28"
+    }
+  },
+  {
+    "questions": "560-579",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №29",
+      "en": "Билет №29"
+    }
+  },
+  {
+    "questions": "580-599",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №30",
+      "en": "Билет №30"
+    }
+  },
+  {
+    "questions": "600-619",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №31",
+      "en": "Билет №31"
+    }
+  },
+  {
+    "questions": "620-639",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №32",
+      "en": "Билет №32"
+    }
+  },
+  {
+    "questions": "640-659",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №33",
+      "en": "Билет №33"
+    }
+  },
+  {
+    "questions": "660-679",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №34",
+      "en": "Билет №34"
+    }
+  },
+  {
+    "questions": "680-699",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №35",
+      "en": "Билет №35"
+    }
+  },
+  {
+    "questions": "700-719",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №36",
+      "en": "Билет №36"
+    }
+  },
+  {
+    "questions": "720-739",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №37",
+      "en": "Билет №37"
+    }
+  },
+  {
+    "questions": "740-759",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №38",
+      "en": "Билет №38"
+    }
+  },
+  {
+    "questions": "760-779",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №39",
+      "en": "Билет №39"
+    }
+  },
+  {
+    "questions": "780-799",
+    "rating_points": {"add": 3, "sub": 1},
+    "name": {
+      "ru": "Билет №40",
+      "en": "Билет №40"
+    }
+  }
+]
