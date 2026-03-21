@@ -1,0 +1,49 @@
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+
+<script>
+  // 1. Твои настройки из Firebase Console
+  const firebaseConfig = {
+    apiKey: "ТВОЙ_КЛЮЧ",
+    databaseURL: "ТВОЙ_URL",
+    projectId: "ТВОЙ_ID",
+    // ... остальные поля
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  // 2. Идентификация пользователя (простой вариант по никнейму в LocalStorage)
+  let userName = localStorage.getItem('pdd_user');
+  if (!userName) {
+    userName = prompt("Введите ваш никнейм для сохранения ошибок:");
+    if (userName) localStorage.setItem('pdd_user', userName);
+    else userName = 'guest';
+  }
+
+  // 3. ФУНКЦИЯ СОХРАНЕНИЯ ОШИБКИ
+  function trackError(questionId) {
+    // Сохраняем в папку пользователя: /users/ivan/errors/ID_вопроса
+    database.ref('users/' + userName + '/errors/' + questionId).set({
+      timestamp: Date.now(),
+      count: firebase.database.ServerValue.increment(1) // Считаем, сколько раз ошиблись
+    });
+  }
+
+  // 4. "СЛЕЖКА" ЗА ПРИЛОЖЕНИЕМ
+  // Будем следить за кликами на кнопку "Ответить"
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.answer-btn')) {
+        // Ждем долю секунды, пока приложение отрисует результат (красный или зеленый)
+        setTimeout(() => {
+            const isWrong = document.querySelector('.question-item.invalid');
+            if (isWrong) {
+                // Пытаемся найти ID вопроса из URL или атрибутов (зависит от index.js)
+                const currentId = window.location.hash; 
+                trackError(currentId);
+                console.log("Ошибка сохранена в Firebase!");
+            }
+        }, 300);
+    }
+  });
+</script>
