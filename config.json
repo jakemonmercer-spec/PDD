@@ -1,0 +1,90 @@
+{
+  "accountInactiveDeleteDays": 90,
+  "testTime": 25,
+  "max_failed": 3,
+  "max_failed_marathon": 81,
+  "defaultWindowHeight": 800,
+  "defaultWindowHeightMobile": 770,
+  "dataVersion": 19,
+  "itemCount": {
+    "cards": 40,
+    "topics": 53
+  },
+  "select_language_by_url": {
+    "ru": [
+      "/экзамен-пдд-кр/"
+    ],
+    "kg": [
+      "/kg/onlayn-test-kyrgyzcha/"
+    ]
+  },
+  "test_mode_rating_points": {
+    "test": {"add": 20, "sub":  10},
+    "test2": {"add": 20, "sub":  10},
+    "repeat": {"add": 0, "sub":  0},
+    "challenge": {"add": 100, "sub":  50},
+    "marathon": {"add": 500, "sub":  200}
+  },
+  "user_ranks": {
+    "newbie": {
+      "penalty": 1
+    },
+    "student": {
+      "threshold": 50,
+      "penalty": 2
+    },
+    "master": {
+      "threshold": 250,
+      "penalty": 5
+    },
+    "expert": {
+      "threshold": 750,
+      "penalty": 10
+    },
+    "profi": {
+      "threshold": 1500,
+      "penalty": 20
+    },
+    "epic": {
+      "threshold": 4000,
+      "penalty": 50
+    },
+    "legend": {
+      "threshold": 8000,
+      "penalty": 80
+    },
+    "mythic": {
+      "threshold": 15000,
+      "penalty": 100
+    }
+  },
+  "user_achievements": {
+    "weekly": {
+      "points": 50
+    },
+    "beginner": {
+      "points": 5
+    },
+    "amateur": {
+      "points": 50
+    },
+    "master": {
+      "points": 200
+    },
+    "expert": {
+      "points": 300
+    },
+    "specialist": {
+      "points": 500
+    },
+    "connoisseur": {
+      "points": 100
+    },
+    "profi": {
+      "points": 250
+    },
+    "hero": {
+      "points": 1000
+    }
+  }
+}
