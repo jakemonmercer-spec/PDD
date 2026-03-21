@@ -1,49 +1,206 @@
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ПДД Марафон 2026 | Аккаунт</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/index.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
 
-<script>
-  // 1. Твои настройки из Firebase Console
-  const firebaseConfig = {
-    apiKey: "ТВОЙ_КЛЮЧ",
-    databaseURL: "ТВОЙ_URL",
-    projectId: "ТВОЙ_ID",
-    // ... остальные поля
-  };
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+    <style>
+        /* Стили для окон входа/регистрации (в дополнение к index.css) */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100dvh;
+            padding: 20px;
+            background: #46178f;
+        }
+        .auth-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .auth-card h2 { color: #46178f; margin-bottom: 20px; font-weight: 900; }
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 10px;
+            color: #111;
+        }
+        .auth-toggle {
+            margin-top: 15px;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        #main-app-ui { display: none; } /* Скрыто до авторизации */
+    </style>
+</head>
+<body>
 
-  // 2. Идентификация пользователя (простой вариант по никнейму в LocalStorage)
-  let userName = localStorage.getItem('pdd_user');
-  if (!userName) {
-    userName = prompt("Введите ваш никнейм для сохранения ошибок:");
-    if (userName) localStorage.setItem('pdd_user', userName);
-    else userName = 'guest';
-  }
+    <!-- ЭКРАН ВХОДА / РЕГИСТРАЦИИ -->
+    <div id="auth-ui" class="auth-container">
+        <div class="auth-card">
+            <h2 id="auth-title">ВХОД</h2>
+            <input type="email" id="auth-email" class="auth-input" placeholder="Email">
+            <input type="password" id="auth-pass" class="auth-input" placeholder="Пароль">
+            <button id="auth-primary-btn" class="auth-btn" onclick="handleAuth()">ВОЙТИ</button>
+            <div id="auth-toggle-btn" class="auth-toggle" onclick="toggleAuthMode()">Нет аккаунта? Регистрация</div>
+            <p id="auth-error" style="color: red; margin-top: 10px; font-size: 0.8rem;"></p>
+        </div>
+    </div>
 
-  // 3. ФУНКЦИЯ СОХРАНЕНИЯ ОШИБКИ
-  function trackError(questionId) {
-    // Сохраняем в папку пользователя: /users/ivan/errors/ID_вопроса
-    database.ref('users/' + userName + '/errors/' + questionId).set({
-      timestamp: Date.now(),
-      count: firebase.database.ServerValue.increment(1) // Считаем, сколько раз ошиблись
-    });
-  }
+    <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ (ТВОЙ ДИЗАЙН) -->
+    <div id="main-app-ui">
+        <div id="app-viewport">
+            <nav class="game-nav" style="display: flex !important; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 10px;">
+                <button class="btn-exit" onclick="logout()">ВЫХОД</button>
+                <div id="user-display" style="font-weight: 800; font-size: 0.8rem;"></div>
+                <div id="timer-display" class="header-time">25:00</div>
+            </nav>
+            <main id="app"></main>
+        </div>
+    </div>
 
-  // 4. "СЛЕЖКА" ЗА ПРИЛОЖЕНИЕМ
-  // Будем следить за кликами на кнопку "Ответить"
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.answer-btn')) {
-        // Ждем долю секунды, пока приложение отрисует результат (красный или зеленый)
-        setTimeout(() => {
-            const isWrong = document.querySelector('.question-item.invalid');
-            if (isWrong) {
-                // Пытаемся найти ID вопроса из URL или атрибутов (зависит от index.js)
-                const currentId = window.location.hash; 
-                trackError(currentId);
-                console.log("Ошибка сохранена в Firebase!");
+    <script>
+        // 1. ТВОЙ КОНФИГ ИЗ FIREBASE (Вставь свои данные!)
+        const firebaseConfig = {
+            apiKey: "ВСТАВЬ_СВОЙ_API_KEY",
+            authDomain: "твой-проект.firebaseapp.com",
+            databaseURL: "https://твой-проект.firebaseio.com",
+            projectId: "твой-проект",
+            storageBucket: "твой-проект.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        let isLoginMode = true;
+        window._log = console.log;
+
+        // --- ЛОГИКА АВТОРИЗАЦИИ ---
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-title').innerText = isLoginMode ? 'ВХОД' : 'РЕГИСТРАЦИЯ';
+            document.getElementById('auth-primary-btn').innerText = isLoginMode ? 'ВОЙТИ' : 'СОЗДАТЬ';
+            document.getElementById('auth-toggle-btn').innerText = isLoginMode ? 'Нет аккаунта? Регистрация' : 'Уже есть аккаунт? Войти';
+        }
+
+        async function handleAuth() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            const errBox = document.getElementById('auth-error');
+            
+            try {
+                if (isLoginMode) {
+                    await auth.signInWithEmailAndPassword(email, pass);
+                } else {
+                    await auth.createUserWithEmailAndPassword(email, pass);
+                }
+            } catch (e) {
+                errBox.innerText = "Ошибка: " + e.message;
             }
-        }, 300);
-    }
-  });
-</script>
+        }
+
+        function logout() {
+            auth.signOut().then(() => location.reload());
+        }
+
+        // --- СЛЕЖКА ЗА СОСТОЯНИЕМ ВХОДА ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('auth-ui').style.display = 'none';
+                document.getElementById('main-app-ui').style.display = 'block';
+                document.getElementById('user-display').innerText = user.email;
+                initAppLogic(user.uid);
+            } else {
+                document.getElementById('auth-ui').style.display = 'flex';
+                document.getElementById('main-app-ui').style.display = 'none';
+            }
+        });
+
+        // --- ЛОГИКА ОШИБОК И ПРИЛОЖЕНИЯ ---
+        function initAppLogic(uid) {
+            // Сохранение ошибки
+            function saveError(qTitle) {
+                const qId = btoa(unescape(encodeURIComponent(qTitle)));
+                db.ref('users/' + uid + '/errors/' + qId).set({
+                    title: qTitle,
+                    timestamp: Date.now()
+                });
+            }
+
+            // Слежка за кнопкой "Ответить"
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.answer-btn')) {
+                    setTimeout(() => {
+                        if (document.querySelector('.question-item.invalid')) {
+                            const title = document.querySelector('.question-title')?.innerText;
+                            if (title) saveError(title);
+                        }
+                    }, 500);
+                }
+
+                // Кнопка "Мои ошибки"
+                if (e.target.innerText && e.target.innerText.includes('Мои ошибки')) {
+                    e.preventDefault();
+                    renderMistakes(uid);
+                }
+            });
+        }
+
+        async function renderMistakes(uid) {
+            const app = document.querySelector('#app');
+            app.innerHTML = '<div class="question-title">Загрузка ошибок из облака...</div>';
+            
+            const snap = await db.ref('users/' + uid + '/errors').once('value');
+            const errors = snap.val();
+
+            if (!errors) {
+                app.innerHTML = '<div class="div_welcome_page"><h2 class="title_main2">ОШИБОК НЕТ!</h2><button class="button_main" onclick="location.reload()">НАЗАД</button></div>';
+                return;
+            }
+
+            let html = `<div class="div_welcome_page"><h2 class="title_main2">МОИ ОШИБКИ (${Object.keys(errors).length})</h2>`;
+            for (let id in errors) {
+                html += `<div class="question-item">${errors[id].title}</div>`;
+            }
+            html += `<button class="button_main" onclick="location.reload()">В МЕНЮ</button></div>`;
+            app.innerHTML = html;
+        }
+    </script>
+
+    <!-- Подключаем основной движок сайта -->
+    <script type="module" src="./assets/index.js"></script>
+</body>
+</html>
