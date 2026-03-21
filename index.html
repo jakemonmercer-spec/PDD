@@ -149,11 +149,18 @@
         }
 
         // --- СЛУШАТЕЛЬ СОСТОЯНИЯ ВХОДА ---
+      // --- СЛУШАТЕЛЬ СОСТОЯНИЯ ВХОДА ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 document.getElementById('main-app-wrapper').style.display = 'block';
                 document.getElementById('user-email-label').innerText = user.displayName || user.email;
+                
+                // ФИКС: Если мы на главной без адреса, принудительно открываем МЕНЮ
+                if (!window.location.hash || window.location.hash === '#/') {
+                    window.location.hash = '#/debug';
+                }
+
                 startAppAnalytics(user.uid);
             } else {
                 document.getElementById('auth-overlay').style.display = 'flex';
