@@ -1,248 +1,127 @@
-/* 
-   QUIZ ULTIMATE PRO 2026 - FULL STABLE VERSION
-   Стиль: Game UI (Montserrat) 
-   Исправлено: Пагинация в ряд, Гигантские картинки, Сетка тем, Карточки ошибок.
-*/
+/* CLEAN & SIMPLE UI FOR MOBILE */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
-
-/* 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ */
 :root {
-    --bg-dark: #46178f;
-    --bg-gradient: linear-gradient(180deg, #46178f 0%, #311066 100%);
-    --accent: #ffcc00;
-    --accent-shadow: #b38f00;
-    --white: #ffffff;
-    --text-dark: #111111;
-    --r: #e21b3c;
-    --b: #1368ce;
-    --y: #ffa600;
-    --g: #26890c;
-    --glass: rgba(255, 255, 255, 0.12);
-    --border: rgba(255, 255, 255, 0.18);
-    --radius-lg: 20px;
-    --radius-md: 12px;
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --primary: #2563eb;
+    --text: #0f172a;
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --danger: #dc2626;
 }
 
-/* 2. СБРОС И БАЗА */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
 }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    background-color: var(--bg-dark);
-    background: var(--bg-gradient);
-    color: var(--white);
-    font-family: 'Montserrat', sans-serif;
-    overflow-x: hidden;
-}
-
-/* 3. ГЛАВНАЯ ОБОЛОЧКА (ФИКСИРУЕМ ШИРИНУ) */
 #app {
-    max-width: 600px; /* Контент больше не разваливается на весь экран ПК */
-    min-height: 100vh;
+    width: 100%;
+    max-width: 500px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px;
-    position: relative;
+    padding: 10px;
 }
 
-/* 4. ШАПКА (HUD) - Теперь всегда видна */
-.game-nav, .header, .header-wrapper {
-    width: 100%;
-    min-height: 65px;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    background: rgba(0, 0, 0, 0.25);
-    padding: 0 15px;
-    border-radius: 0 0 15px 15px;
-    margin-bottom: 20px;
-    backdrop-filter: blur(10px);
-}
-
-.btn-exit, .header-close-btn, .nav-back-button, .back-button {
-    background: var(--r) !important;
-    color: white !important;
-    padding: 8px 16px !important;
-    border-radius: 10px !important;
-    font-weight: 800 !important;
-    text-decoration: none !important;
-    font-size: 12px !important;
-    border: none !important;
-    box-shadow: 0 4px 0 #9e132a !important;
-    text-transform: uppercase;
-}
-
-.header-time, #timer-display {
-    background: var(--white);
-    color: var(--text-dark);
-    padding: 5px 12px;
-    border-radius: 8px;
-    font-weight: 900;
-}
-
-/* 5. ЭКРАН ПРИВЕТСТВИЯ */
-.div_welcome_page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.logo_main1 {
-    width: 140px !important; /* Фикс гигантского лого */
-    height: auto !important;
-    margin: 15px auto !important;
-    display: block !important;
-}
-
-.title_main2 { 
-    color: var(--accent); 
-    font-weight: 900; 
-    font-size: 1.3rem; 
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Главные кнопки режимов */
+/* Приветствие и Меню */
+.div_welcome_page { padding: 20px 0; text-align: center; }
+.logo_main1 { width: 100px !important; height: auto; margin-bottom: 20px; }
 .test-mode-link {
     display: block !important;
-    width: 100% !important;
-    background: var(--white) !important;
-    color: var(--bg-dark) !important;
-    padding: 20px !important;
-    margin: 8px 0 !important;
-    border-radius: 15px !important;
-    font-weight: 900 !important;
-    text-align: center !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--primary) !important;
+    padding: 16px !important;
+    margin-bottom: 10px !important;
+    border-radius: 12px !important;
     text-decoration: none !important;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.2) !important;
-    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
 }
 
-/* 6. РАЗДЕЛ ТЕМЫ (СЕТКА) */
-.card-container {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    width: 100%;
-    margin-top: 15px;
-}
-
-.card {
-    background: var(--glass) !important;
-    border: 2px solid var(--border) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 15px !important;
-    min-height: 80px;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.card-name { color: white !important; font-weight: 700; font-size: 0.8rem; }
-
-/* 7. ЭКРАН ВОПРОСА (ФИКС ГИГАНТИЗМА) */
+/* Экран вопроса */
 .main-img {
     width: 100% !important;
-    max-height: 280px !important; /* Картинка больше не съедает весь экран */
-    object-fit: contain !important;
+    max-height: 220px !important;
+    object-fit: contain;
+    border-radius: 12px;
     background: #000;
-    border-radius: var(--radius-lg);
-    border: 4px solid var(--white);
-    margin-bottom: 20px !important;
+    margin-bottom: 15px !important;
 }
 
 .question-title {
-    background: var(--white);
-    color: var(--text-dark);
-    padding: 20px;
-    border-radius: var(--radius-lg);
-    font-weight: 800;
-    font-size: 1rem;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+    margin-bottom: 15px !important;
+    text-align: left !important;
 }
 
 /* Варианты ответов */
-.question-content { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-
 .question-item {
-    background: var(--glass) !important;
-    border: 2px solid var(--border) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 16px !important;
-    color: white !important;
-    font-weight: 700;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    padding: 14px !important;
+    margin-bottom: 8px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
     cursor: pointer;
     display: flex !important;
     align-items: center;
 }
 
-.question-item.active { background: var(--white) !important; color: var(--bg-dark) !important; border-color: var(--accent) !important; }
-.question-item.valid { background: var(--g) !important; border-color: white !important; }
-.question-item.invalid { background: var(--r) !important; border-color: white !important; }
+.question-item.active { border-color: var(--primary) !important; background: #eff6ff !important; }
+.question-item.valid { background: #dcfce7 !important; border-color: var(--success) !important; color: var(--success) !important; font-weight: 700; }
+.question-item.invalid { background: #fee2e2 !important; border-color: var(--danger) !important; color: var(--danger) !important; }
 
-/* 8. ПАГИНАЦИЯ (НОМЕРА В РЯД) */
+/* Кнопка Ответить */
+.answer-btn, .button_main {
+    width: 100% !important;
+    background: var(--primary) !important;
+    color: white !important;
+    padding: 16px !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    border: none !important;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* ПАГИНАЦИЯ (ЦИФРЫ ВНИЗУ) - ГЛАВНЫЙ ФИКС */
 ul#componentContainer {
     display: flex !important;
-    flex-direction: row !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    list-style: none !important;
     gap: 6px !important;
-    margin: 20px 0 !important;
+    list-style: none !important;
+    margin-top: 20px !important;
     padding: 0 !important;
 }
 
-ul#componentContainer li { list-style: none !important; }
-
 .pagination-item {
-    width: 38px !important;
-    height: 38px !important;
+    width: 32px !important;
+    height: 32px !important;
+    background: #f1f5f9 !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
     display: flex !important;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.3) !important;
-    border-radius: 8px !important;
-    font-weight: 800;
-    font-size: 13px !important;
-    color: white !important;
-    border: 1px solid var(--border) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
 }
 
-.pagination-item.active-page { background: var(--accent) !important; color: var(--text-dark) !important; border: none !important; }
+/* Цвета для цифр внизу (как в оригинале) */
+.pagination-item.active-page { background: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
+.pagination-item.valid { background: var(--success) !important; color: white !important; border: none !important; }
+.pagination-item.invalid { background: var(--danger) !important; color: white !important; border: none !important; }
 
-/* 9. ФИКСИРОВАННАЯ КНОПКА ДЕЙСТВИЯ */
-.answer-btn, .button_main {
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: calc(100% - 40px) !important;
-    max-width: 560px !important;
-    background: var(--accent) !important;
-    color: var(--text-dark) !important;
-    padding: 20px !important;
-    border-radius: 18px !important;
-    font-size: 1.3rem !important;
-    font-weight: 900 !important;
-    border: none !important;
-    box-shadow: 0 6px 0 var(--accent-shadow) !important;
-    z-index: 9999;
-}
-
-/* 10. СКРЫВАЕМ МУСОР */
-.stylish_line1, .stylish_line2, .welcome_page_spacer, br, .main-line, li::before { 
-    display: none !important; 
-}
+/* Скрываем лишнее */
+.stylish_line1, .stylish_line2, .welcome_page_spacer, br, .main-line, li::before { display: none !important; }
