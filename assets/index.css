@@ -1,127 +1,227 @@
-/* CLEAN & SIMPLE UI FOR MOBILE */
+/* 
+   PDD CLEAN MOBILE UI 
+   Особенности: Оптимизация под маленькие экраны, фиксированная навигация, 
+   индикация правильных/неправильных ответов.
+*/
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
 :root {
-    --bg: #1a1a1a;
+    --bg: #1a1a1a1a;
     --surface: #f8fafc;
     --primary: #2563eb;
-    --text: #0f172a;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
     --border: #e2e8f0;
-    --success: #16a34a;
-    --danger: #dc2626;
+    --success: #16a34a; /* Зеленый для правильных */
+    --danger: #dc2626;  /* Красный для ошибок */
+    --radius: 12px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.5;
+/* Базовые настройки */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
-#app {
+html, body {
+    height: 100dvh;
     width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 10px;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+    overflow: hidden;
 }
 
-/* Приветствие и Меню */
-.div_welcome_page { padding: 20px 0; text-align: center; }
-.logo_main1 { width: 100px !important; height: auto; margin-bottom: 20px; }
-.test-mode-link {
-    display: block !important;
-    background: var(--surface) !important;
-    border: 1px solid var(--border) !important;
-    color: var(--primary) !important;
-    padding: 16px !important;
-    margin-bottom: 10px !important;
-    border-radius: 12px !important;
-    text-decoration: none !important;
-    font-weight: 700 !important;
-    text-align: center !important;
+/* Контейнер приложения (занимает всё пространство под шапкой) */
+.container, .div_welcome_page {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 20px;
 }
 
-/* Экран вопроса */
+/* Картинка вопроса - адаптивный размер */
 .main-img {
     width: 100% !important;
-    max-height: 220px !important;
+    max-height: clamp(150px, 30vh, 250px) !important;
     object-fit: contain;
-    border-radius: 12px;
-    background: #000;
+    background: #f1f5f9;
+    border-radius: var(--radius);
     margin-bottom: 15px !important;
 }
 
+/* Заглушка "Вопрос без рисунка" */
+.main-img[src*="placeholder"] {
+    opacity: 0.5;
+    background: #fff;
+    border: 1px dashed var(--border);
+}
+
+/* Текст вопроса */
 .question-title {
     font-size: 1rem !important;
     font-weight: 700 !important;
-    color: var(--text) !important;
+    line-height: 1.4;
     margin-bottom: 15px !important;
-    text-align: left !important;
+    text-align: left;
+    width: 100%;
 }
 
-/* Варианты ответов */
+/* Список вариантов ответов */
+.question-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .question-item {
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: 10px !important;
     padding: 14px !important;
-    margin-bottom: 8px !important;
     font-size: 0.9rem !important;
     font-weight: 500 !important;
-    cursor: pointer;
+    color: var(--text-main) !important;
     display: flex !important;
     align-items: center;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
-.question-item.active { border-color: var(--primary) !important; background: #eff6ff !important; }
-.question-item.valid { background: #dcfce7 !important; border-color: var(--success) !important; color: var(--success) !important; font-weight: 700; }
-.question-item.invalid { background: #fee2e2 !important; border-color: var(--danger) !important; color: var(--danger) !important; }
+/* Состояния вариантов ответов */
+.question-item.active {
+    border-color: var(--primary) !important;
+    background: #eff6ff !important;
+}
+
+.question-item.valid {
+    background: #dcfce7 !important;
+    border-color: var(--success) !important;
+    color: var(--success) !important;
+    font-weight: 700;
+}
+
+.question-item.invalid {
+    background: #fee2e2 !important;
+    border-color: var(--danger) !important;
+    color: var(--danger) !important;
+    font-weight: 700;
+}
 
 /* Кнопка Ответить */
 .answer-btn, .button_main {
     width: 100% !important;
     background: var(--primary) !important;
-    color: white !important;
+    color: #fff !important;
     padding: 16px !important;
     border-radius: 10px !important;
     font-weight: 700 !important;
     font-size: 1rem !important;
     border: none !important;
-    margin-top: 10px;
+    margin-top: 15px;
     cursor: pointer;
 }
 
-/* ПАГИНАЦИЯ (ЦИФРЫ ВНИЗУ) - ГЛАВНЫЙ ФИКС */
+/* ПАГИНАЦИЯ (НОМЕРА ВОПРОСОВ 1-20) */
 ul#componentContainer {
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
     gap: 6px !important;
     list-style: none !important;
-    margin-top: 20px !important;
+    margin-top: 25px !important;
     padding: 0 !important;
+    width: 100%;
 }
 
 .pagination-item {
-    width: 32px !important;
-    height: 32px !important;
+    width: 34px !important;
+    height: 34px !important;
     background: #f1f5f9 !important;
     border: 1px solid var(--border) !important;
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     display: flex !important;
     align-items: center;
     justify-content: center;
     font-size: 11px !important;
     font-weight: 700 !important;
-    color: #64748b !important;
+    color: var(--text-muted) !important;
+    transition: 0.2s;
 }
 
-/* Цвета для цифр внизу (как в оригинале) */
-.pagination-item.active-page { background: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
-.pagination-item.valid { background: var(--success) !important; color: white !important; border: none !important; }
-.pagination-item.invalid { background: var(--danger) !important; color: white !important; border: none !important; }
+/* Окрашивание цифр внизу (правильно/неправильно) */
+.pagination-item.active-page {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-color: var(--primary) !important;
+}
 
-/* Скрываем лишнее */
-.stylish_line1, .stylish_line2, .welcome_page_spacer, br, .main-line, li::before { display: none !important; }
+.pagination-item.valid {
+    background: var(--success) !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.pagination-item.invalid {
+    background: var(--danger) !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+/* Меню выбора тестов (Главный экран) */
+.test-mode-link {
+    display: block !important;
+    width: 100% !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--primary) !important;
+    padding: 16px !important;
+    margin-bottom: 10px !important;
+    border-radius: var(--radius) !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    text-align: center;
+}
+
+/* Сетка билетов */
+.card-container {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important;
+    gap: 8px;
+    width: 100%;
+}
+
+.card {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    padding: 12px 5px !important;
+    text-align: center;
+    color: var(--text-main) !important;
+}
+
+/* Скрытие лишних элементов оригинала */
+.stylish_line1, 
+.stylish_line2, 
+.welcome_page_spacer, 
+br, 
+.main-line, 
+li::before,
+.header .language { 
+    display: none !important; 
+}
+
+/* Адаптация под совсем маленькие телефоны */
+@media (max-width: 340px) {
+    .pagination-item {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10px !important;
+    }
+    .question-title { font-size: 0.9rem !important; }
+}
