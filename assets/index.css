@@ -1,213 +1,175 @@
 /* 
-   PDD TOTAL REBOOT 2026 
-   Style: Professional Soft Dark / Universal
-   Fixes: Pagination colors, giant images, mobile centering
+   PDD TOTAL REBOOT 2026 - FINAL CSS
+   Универсальная мягкая тема + Фикс всех багов
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
 
 :root {
-    --bg: #0f172a;           /* Глубокий полночный */
-    --surface: #1e293b;      /* Цвет карточек */
-    --surface-light: #334155; /* Подсветка */
-    --primary: #38bdf8;      /* Голубой акцент */
-    --text: #f1f5f9;         /* Текст */
-    --text-muted: #94a3b8;   /* Приглушенный текст */
-    --border: #334155;       /* Границы */
-    --success: #10b981 !important; /* Зеленый (ВАЖНО !important) */
-    --danger: #f43f5e !important;  /* Красный (ВАЖНО !important) */
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --primary: #38bdf8;
+    --text: #f1f5f9;
+    --success: #10b981;
+    --danger: #f43f5e;
+    --border: #334155;
     --radius: 16px;
 }
 
-/* 1. БАЗОВЫЙ СБРОС */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: 'Montserrat', sans-serif; 
+    height: 100dvh; 
+    overflow: hidden;
 }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.5;
-    overflow-x: hidden;
-}
+#main-app-wrapper { display: flex; flex-direction: column; height: 100%; }
 
-/* 2. ГЛАВНАЯ ОБОЛОЧКА */
-#app {
-    width: 100%;
-    max-width: 600px; /* Зажимаем контент для ПК и больших телефонов */
-    margin: 0 auto;
-    padding: 10px;
+/* ШАПКА */
+.app-header {
+    height: 60px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* 3. ШАПКА (Навигация) */
-.game-header, .top-bar {
-    position: fixed;
-    top: 0; left: 0; width: 100%;
-    height: 55px;
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    display: flex !important;
-    justify-content: space-between !important;
+    justify-content: space-between;
     align-items: center;
     padding: 0 15px;
-    z-index: 1000;
-    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
-#app { margin-top: 55px !important; } /* Отступ под шапку */
+.btn-header {
+    background: var(--danger);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 11px;
+    cursor: pointer;
+}
 
-/* 4. ГЛАВНЫЙ ЭКРАН (МЕНЮ) */
-.div_welcome_page {
+.btn-header.home { background: var(--primary); color: var(--bg); margin-right: 5px; }
+
+#user-display { font-size: 10px; font-weight: 800; opacity: 0.5; }
+#timer-display { font-weight: 900; color: var(--primary); font-size: 18px; }
+
+/* КОНТЕНТ */
+#app {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+    scrollbar-width: none;
+}
+#app::-webkit-scrollbar { display: none; }
+
+/* КАРТИНКИ */
+.main-img, .logo_main1 {
     width: 100% !important;
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-}
-
-.logo_main1 {
-    width: 130px !important;
-    height: auto !important;
-    margin: 20px auto !important;
-}
-
-.test-mode-link {
-    display: block !important;
-    width: 100% !important;
-    background: var(--surface) !important;
-    border: 1px solid var(--border) !important;
-    color: var(--text) !important;
-    padding: 18px !important;
-    margin-bottom: 10px !important;
-    border-radius: var(--radius) !important;
-    text-decoration: none !important;
-    font-weight: 700 !important;
-    text-align: center !important;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-}
-
-/* 5. ЭКРАН ВОПРОСА */
-.main-img {
-    width: 100% !important;
-    max-height: clamp(180px, 35vh, 280px) !important;
+    max-height: 250px !important;
     object-fit: contain;
-    background: #000;
     border-radius: var(--radius);
+    background: #000;
+    margin: 10px auto !important;
     border: 2px solid var(--border);
-    margin: 10px 0 20px !important;
 }
 
+/* ВОПРОС */
 .question-title {
-    font-size: 1.05rem !important;
-    font-weight: 700 !important;
-    margin-bottom: 20px !important;
-    text-align: left !important;
+    background: white;
+    color: #111;
+    padding: 20px;
+    border-radius: var(--radius);
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 15px;
     line-height: 1.4;
 }
 
-/* Кнопки ответов */
+/* ОТВЕТЫ */
 .question-item {
     background: var(--surface) !important;
-    border: 1.5px solid var(--border) !important;
+    border: 2px solid var(--border) !important;
     border-radius: 12px !important;
     padding: 16px !important;
     margin-bottom: 10px !important;
+    color: white !important;
+    font-weight: 600;
     cursor: pointer;
     display: flex !important;
-    align-items: center;
-    transition: 0.2s;
-    color: var(--text) !important;
 }
-
 .question-item.active { border-color: var(--primary) !important; background: rgba(56, 189, 248, 0.1) !important; }
+.question-item.valid { background: var(--success) !important; border-color: white !important; }
+.question-item.invalid { background: var(--danger) !important; border-color: white !important; }
 
-/* 6. ЦВЕТА ПРАВИЛЬНО / НЕПРАВИЛЬНО (В ТЕСТЕ) */
-.question-item.valid { background: rgba(16, 185, 129, 0.2) !important; border-color: var(--success) !important; }
-.question-item.invalid { background: rgba(244, 63, 94, 0.2) !important; border-color: var(--danger) !important; }
+/* ПАГИНАЦИЯ (ФОТО 1) */
+ul#componentContainer {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 0;
+}
+.pagination-item {
+    width: 38px !important;
+    height: 38px !important;
+    background: var(--surface) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px !important;
+    color: var(--text);
+}
+.pagination-item.active-page { border: 2px solid var(--primary); color: var(--primary); }
 
-/* 7. КНОПКА ОТВЕТИТЬ */
+/* Цвета по атрибутам от Хирурга */
+.pagination-item[data-state="correct"] { background: var(--success) !important; color: white !important; }
+.pagination-item[data-state="wrong"] { background: var(--danger) !important; color: white !important; }
+
+/* ЭКРАН РЕЗУЛЬТАТОВ (ФОТО 3) */
+.result { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.result-title { font-weight: 900; color: var(--danger); margin-bottom: 20px; }
+
+.values-group {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+.res-item {
+    background: var(--surface);
+    padding: 15px 10px;
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+.res-item .label { font-size: 9px; font-weight: 700; opacity: 0.6; margin-bottom: 5px; text-transform: uppercase; }
+.res-item .val { font-size: 20px; font-weight: 900; }
+.res-item .val.correct { color: var(--success); }
+.res-item .val.wrong { color: var(--danger); }
+
+/* КНОПКА ОТВЕТИТЬ */
 .answer-btn, .button_main {
     width: 100% !important;
     background: var(--primary) !important;
     color: var(--bg) !important;
-    padding: 18px !important;
-    border-radius: 14px !important;
-    font-weight: 800 !important;
-    font-size: 1.1rem !important;
+    padding: 20px !important;
+    border-radius: 15px !important;
+    font-weight: 900 !important;
+    font-size: 1.2rem !important;
     border: none !important;
-    margin: 20px 0 !important;
     cursor: pointer;
 }
 
-/* 8. ГЛАВНЫЙ ФИКС ПАГИНАЦИИ (Цифры внизу) */
-ul#componentContainer {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    list-style: none !important;
-    padding: 20px 0 !important;
-    width: 100% !important;
-}
-
-ul#componentContainer li { list-style: none !important; }
-
-.pagination-item {
-    width: 36px !important;
-    height: 36px !important;
-    background: var(--surface) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 10px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    color: var(--text-muted) !important;
-}
-
-/* ОКРАШИВАНИЕ ЦИФР ПО РЕЗУЛЬТАТУ */
-.pagination-item.active-page { background: var(--primary) !important; color: var(--bg) !important; }
-
-/* Если родитель (li) получил класс от движка, красим внутреннюю кнопку */
-li.valid .pagination-item, .pagination-item.is-correct, .pagination-item.valid {
-    background-color: var(--success) !important;
-    color: white !important;
-    border: none !important;
-}
-
-li.invalid .pagination-item, .pagination-item.is-wrong, .pagination-item.invalid {
-    background-color: var(--danger) !important;
-    color: white !important;
-    border: none !important;
-}
-
-/* 9. СКРЫТИЕ МУСОРА */
-.stylish_line1, .stylish_line2, .welcome_page_spacer, br, .main-line, li::before, .question-item input {
+/* Скрываем старье */
+.stylish_line1, .stylish_line2, .welcome_page_spacer, br, .main-line, li::before, .header .language, .titles-group, .question-item input {
     display: none !important;
-}
-
-/* 10. АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ */
-@media (max-width: 360px) {
-    .pagination-item { width: 30px !important; height: 30px !important; font-size: 11px !important; }
-    .question-title { font-size: 0.95rem !important; }
-}
-
-/* 11. ПОЯСНЕНИЕ К ВОПРОСУ */
-.question-explanation {
-    background: var(--surface) !important;
-    padding: 15px;
-    border-radius: 12px;
-    margin: 20px 0;
-    border-left: 5px solid var(--primary);
-    font-size: 13px;
-    line-height: 1.5;
 }
