@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ПДД КР 2026 | Cloud Edition</title>
     
-    <!-- Шрифты и стили -->
+    <!-- Фикс для движка: определяем _log до загрузки всего остального -->
+    <script>window._log = console.log;</script>
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/index.css">
     
-    <!-- Firebase SDK (Compat версии для стабильности) -->
+    <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
 
     <style>
-        /* Стили экрана входа */
         #auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0f172a; display: flex; align-items: center; justify-content: center;
@@ -40,63 +41,31 @@
             border-radius: 12px; font-weight: 600; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;
         }
-
-        /* Оболочка приложения */
-        #main-app-wrapper { 
-            display: none; 
-            flex-direction: column;
-            height: 100dvh;
-            width: 100%;
-            background: #0f172a;
-        }
-
-        .top-bar {
-            flex-shrink: 0; height: 60px; background: #1e293b;
-            border-bottom: 1px solid #334155;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; z-index: 1000;
-        }
-
-        .btn-nav {
-            background: #334155; border: none; padding: 8px 14px;
-            border-radius: 10px; font-size: 12px; font-weight: 800; color: #fff;
-            text-decoration: none; cursor: pointer;
-        }
+        #main-app-wrapper { display: none; flex-direction: column; height: 100dvh; width: 100%; background: #0f172a; }
+        .top-bar { flex-shrink: 0; height: 60px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; }
+        .btn-nav { background: #334155; border: none; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 800; color: #fff; text-decoration: none; cursor: pointer; }
         .btn-nav.accent { background: #38bdf8; color: #0f172a; }
-
-        #app {
-            flex-grow: 1; overflow-y: auto; padding: 15px;
-            width: 100%; max-width: 600px; margin: 0 auto;
-            scrollbar-width: none;
-        }
+        #app { flex-grow: 1; overflow-y: auto; padding: 15px; width: 100%; max-width: 600px; margin: 0 auto; scrollbar-width: none; }
         #app::-webkit-scrollbar { display: none; }
-
         .user-label { color: #94a3b8; font-size: 10px; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <!-- ЭКРАН АВТОРИЗАЦИИ -->
     <div id="auth-overlay">
         <div class="auth-card">
             <h2 style="color:#38bdf8; margin-bottom:20px; font-weight:900;">ПДД КР 2026</h2>
-            
             <button class="btn-google" onclick="handleGoogleAuth()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-                Вход через Google
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Вход через Google
             </button>
-
             <div style="margin:15px; color:#475569; font-size:10px; font-weight:800;">ИЛИ ПОЧТА</div>
-
             <input type="email" id="auth-email" class="auth-input" placeholder="Email">
             <input type="password" id="auth-pass" class="auth-input" placeholder="Пароль">
-            
             <button class="btn-primary" onclick="handleEmailAuth()">ВОЙТИ / СОЗДАТЬ</button>
             <p id="auth-error" style="color:#f43f5e; font-size:11px; margin-top:15px; font-weight:600;"></p>
         </div>
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div id="main-app-wrapper">
         <header class="top-bar">
             <div style="display:flex; gap:8px; align-items:center;">
@@ -106,16 +75,13 @@
             <div class="user-label" id="user-display-name"></div>
             <div id="timer-display" style="font-weight:900; color:#38bdf8; font-size:16px;">25:00</div>
         </header>
-        
         <main id="app"></main>
     </div>
 
-    <!-- ЛОГИКА ПРИЛОЖЕНИЯ -->
+    <!-- Firebase и основная логика -->
     <script type="module">
-        // Импортируем нашу новую облачную логику
         import { initCloudApp } from './assets/cloud-logic.js';
 
-        // Твой конфиг Firebase
         const firebaseConfig = {
           apiKey: "AIzaSyCWpx351vaBx5dtNubE2EKI3LHdhO-NDCs",
           authDomain: "pdd-kg-local.firebaseapp.com",
@@ -126,20 +92,23 @@
           appId: "1:975775800028:web:9b036c419cc4d1f082b219"
         };
 
-        // Инициализация
+        // 1. Сначала инициализация
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        window._log = console.log;
 
-        // Функции входа (делаем глобальными для кнопок onclick)
+        // 2. Привязываем функции к window, чтобы кнопки в HTML их видели
         window.handleEmailAuth = async () => {
             const email = document.getElementById('auth-email').value;
             const pass = document.getElementById('auth-pass').value;
+            const errBox = document.getElementById('auth-error');
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
             } catch (e) {
-                if (e.code === 'auth/user-not-found') await auth.createUserWithEmailAndPassword(email, pass);
-                else document.getElementById('auth-error').innerText = e.message;
+                if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+                    try {
+                        await auth.createUserWithEmailAndPassword(email, pass);
+                    } catch (regErr) { errBox.innerText = regErr.message; }
+                } else { errBox.innerText = e.message; }
             }
         };
 
@@ -149,22 +118,21 @@
         };
 
         window.logout = () => {
-            if(confirm("Выйти из аккаунта?")) auth.signOut().then(() => location.reload());
+            if(confirm("Выйти?")) auth.signOut().then(() => location.reload());
         };
 
-        // Слежка за состоянием входа
+        // 3. Слушатель авторизации
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 document.getElementById('main-app-wrapper').style.display = 'flex';
                 document.getElementById('user-display-name').innerText = user.email.split('@')[0];
                 
-                // Если зашли на пустую страницу - кидаем в меню
                 if (!window.location.hash || window.location.hash === '#/') {
                     window.location.hash = '#/debug';
                 }
-
-                // ЗАПУСКАЕМ ОБЛАЧНУЮ ЛОГИКУ (сохранение ошибок и тренажер)
+                
+                // Запуск облачной логики из твоего JS файла
                 initCloudApp(user.uid);
             } else {
                 document.getElementById('auth-overlay').style.display = 'flex';
@@ -173,7 +141,7 @@
         });
     </script>
 
-    <!-- Подключаем основной движок оригинального сайта -->
+    <!-- Основной движок сайта -->
     <script type="module" src="./assets/index.js"></script>
 </body>
 </html>
