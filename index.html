@@ -109,75 +109,102 @@
     </div>
 
     <!-- 4. ОСНОВНАЯ ЛОГИКА СОГЛАСОВАНИЯ -->
-    <script type="module">
-        import { initCloudApp } from './assets/cloud-logic.js';
+   <script type="module">
+    import { initCloudApp } from './assets/cloud-logic.js';
 
-        // Ждем авторизацию и запускаем всё остальное
-        window.auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('auth-overlay').style.display = 'none';
-                document.getElementById('main-app-wrapper').style.display = 'flex';
-                document.getElementById('user-tag').innerText = user.email.split('@')[0];
-                
-                // Переход в меню, если адрес пустой
-                if (!window.location.hash || window.location.hash === '#/') {
-                    window.location.hash = '#/debug';
-                }
-
-                // Инициализируем наш облачный трекер
-                initCloudApp(user.uid);
-                
-                // Запускаем "Хирурга" интерфейса
-                startSurgeonMode();
-            } else {
-                document.getElementById('auth-overlay').style.display = 'flex';
-                document.getElementById('main-app-wrapper').style.display = 'none';
+    // 1. СЛУШАТЕЛЬ АВТОРИЗАЦИИ
+    window.auth.onAuthStateChanged(user => {
+        if (user) {
+            // Успешный вход
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('main-app-wrapper').style.display = 'flex';
+            
+            // Отображаем имя пользователя (обрезаем до @)
+            const name = user.displayName || user.email.split('@')[0];
+            document.getElementById('user-tag').innerText = name.toUpperCase();
+            
+            // Если адрес пустой, перекидываем в меню выбора
+            if (!window.location.hash || window.location.hash === '#/') {
+                window.location.hash = '#/debug';
             }
-        });
 
-        // Функция исправления багов оригинального движка
-        function startSurgeonMode() {
-            const observer = new MutationObserver(() => {
-                // А. Исправляем цвета пагинации (цифры внизу)
-                document.querySelectorAll('ul#componentContainer li').forEach(li => {
-                    const btn = li.querySelector('.pagination-item');
-                    if (btn) {
-                        if (li.classList.contains('valid')) btn.setAttribute('data-res', 'bright');
-                        else if (li.classList.contains('invalid')) btn.setAttribute('data-res', 'dark');
-                        else btn.setAttribute('data-res', 'normal');
-                    }
-                });
+            // Инициализируем сохранение ошибок в Firebase
+            initCloudApp(user.uid);
+            
+            // Запускаем постоянный контроль интерфейса
+            startGlobalSurgeon();
+        } else {
+            // Не авторизован
+            document.getElementById('auth-overlay').style.display = 'flex';
+            document.getElementById('main-app-wrapper').style.display = 'none';
+        }
+    });
 
-                // Б. Исправляем кривой текст результатов (51500:41 -> Карточки)
-                const resValues = document.querySelector('.values-group');
-                if (resValues && !resValues.querySelector('.surgeon-res')) {
-                    const raw = resValues.innerText.trim();
-                    const parts = raw.match(/(\d+)(\d{1,2})(\d{2}:\d{2})/);
-                    if (parts) {
-                        resValues.innerHTML = `
-                            <div class="surgeon-res" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; width:100%;">
-                                <div style="background:#1e293b; padding:12px; border-radius:12px; text-align:center; border:1px solid #334155;">
-                                    <div style="font-size:8px; opacity:0.5; text-transform:uppercase;">Верно</div>
-                                    <div style="font-size:20px; font-weight:900; color:#10b981;">${parts[1]}</div>
-                                </div>
-                                <div style="background:#1e293b; padding:12px; border-radius:12px; text-align:center; border:1px solid #334155;">
-                                    <div style="font-size:8px; opacity:0.5; text-transform:uppercase;">Ошибки</div>
-                                    <div style="font-size:20px; font-weight:900; color:#f43f5e;">${parts[2]}</div>
-                                </div>
-                                <div style="background:#1e293b; padding:12px; border-radius:12px; text-align:center; border:1px solid #334155;">
-                                    <div style="font-size:8px; opacity:0.5; text-transform:uppercase;">Время</div>
-                                    <div style="font-size:20px; font-weight:900; color:#fff;">${parts[3]}</div>
-                                </div>
-                            </div>
-                        `;
+    // 2. ФУНКЦИЯ ГЛОБАЛЬНОГО КОНТРОЛЯ ИНТЕРФЕЙСА (ХИРУРГ)
+    function startGlobalSurgeon() {
+        // Используем интервал для максимальной надежности против Vue.js re-render
+        setInterval(() => {
+            
+            // А. КРАСИМ ПАГИНАЦИЮ (Цифры 1-20)
+            // Ищем элементы списка, которые оригинальный движок уже пометил
+            const navItems = document.querySelectorAll('ul#componentContainer li');
+            navItems.forEach(li => {
+                const btn = li.querySelector('.pagination-item');
+                if (btn) {
+                    if (li.classList.contains('valid')) {
+                        btn.setAttribute('data-res', 'bright'); // Красим в яркий (правильно)
+                    } else if (li.classList.contains('invalid')) {
+                        btn.setAttribute('data-res', 'dark');   // Красим в темный (ошибка)
+                    } else {
+                        btn.setAttribute('data-res', 'normal'); // Обычный
                     }
                 }
             });
-            observer.observe(document.getElementById('app'), { childList: true, subtree: true });
-        }
-    </script>
 
-    <!-- 5. ДВИЖОК ОРИГИНАЛЬНОГО САЙТА (В самом конце) -->
-    <script type="module" src="./assets/index.js"></script>
+            // Б. ЧИНИМ ЭКРАН РЕЗУЛЬТАТОВ (Разрезаем строку 51500:41)
+            const resValues = document.querySelector('.values-group');
+            // Если блок есть и мы его еще не "причесали"
+            if (resValues && !resValues.querySelector('.res-card-pro')) {
+                const rawText = resValues.innerText.replace(/\s/g, ''); // Убираем пробелы
+                
+                // Регулярка ловит: (Правильные)(Ошибки)(Время 00:00)
+                // Пример: 18200:45 -> 18 | 2 | 00:45
+                const match = rawText.match(/(\d+)(\d+)(\d{2}:\d{2})/);
+                
+                if (match) {
+                    resValues.innerHTML = `
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; width:100%;">
+                            <div class="res-card-pro" style="background:#1e293b; padding:15px; border-radius:14px; text-align:center; border:1px solid #334155;">
+                                <div style="font-size:8px; opacity:0.5; text-transform:uppercase; font-weight:800; margin-bottom:5px;">Верно</div>
+                                <div style="font-size:22px; font-weight:900; color:#10b981;">${match[1]}</div>
+                            </div>
+                            <div class="res-card-pro" style="background:#1e293b; padding:15px; border-radius:14px; text-align:center; border:1px solid #334155;">
+                                <div style="font-size:8px; opacity:0.5; text-transform:uppercase; font-weight:800; margin-bottom:5px;">Ошибки</div>
+                                <div style="font-size:22px; font-weight:900; color:#f43f5e;">${match[2]}</div>
+                            </div>
+                            <div class="res-card-pro" style="background:#1e293b; padding:15px; border-radius:14px; text-align:center; border:1px solid #334155;">
+                                <div style="font-size:8px; opacity:0.5; text-transform:uppercase; font-weight:800; margin-bottom:5px;">Время</div>
+                                <div style="font-size:22px; font-weight:900; color:#38bdf8;">${match[3]}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // В. ПРИНУДИТЕЛЬНОЕ СКРЫТИЕ МУСОРА (Селектор языка и полоски)
+            const junk = document.querySelectorAll('.language, .stylish_line1, .stylish_line2, .main-line');
+            junk.forEach(el => el.style.display = 'none');
+
+            // Г. ФИКС КНОПОК "ЗАКРЫТЬ" И "ПРОСМОТР"
+            // Добавляем им наши классы, если движок их пересоздал
+            const closeBtn = document.querySelector('.action-close');
+            const viewBtn = document.querySelector('.action-result');
+            if (closeBtn) closeBtn.innerHTML = 'ЗАКРЫТЬ';
+            if (viewBtn) viewBtn.innerHTML = 'АНАЛИЗ ТЕСТА';
+
+        }, 400); // Проверка 2.5 раза в секунду - баланс между скоростью и нагрузкой
+    }
+</script>
+<script type="module" src="./assets/index.js"></script>
 </body>
 </html>
