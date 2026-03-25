@@ -5,21 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ПДД КР 2026 | Cloud Edition</title>
     
-    <!-- 1. ГЛОБАЛЬНЫЕ ФИКСЫ (Должны быть первыми) -->
+    <!-- 1. ПЕРВООЧЕРЕДНЫЕ ГЛОБАЛЬНЫЕ НАСТРОЙКИ -->
     <script>
-        window._log = console.log; // Фикс для движка index.js
+        window._log = console.log; // Фикс для движка сайта
     </script>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/index.css">
     
-    <!-- 2. Firebase SDK (Compat) -->
+    <!-- 2. ПОДКЛЮЧЕНИЕ FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
 
+    <!-- 3. НЕМЕДЛЕННАЯ ИНИЦИАЛИЗАЦИЯ (до загрузки модулей) -->
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyCWpx351vaBx5dtNubE2EKI3LHdhO-NDCs",
+          authDomain: "pdd-kg-local.firebaseapp.com",
+          databaseURL: "https://pdd-kg-local-default-rtdb.firebaseio.com",
+          projectId: "pdd-kg-local",
+          storageBucket: "pdd-kg-local.firebasestorage.app",
+          messagingSenderId: "975775800028",
+          appId: "1:975775800028:web:9b036c419cc4d1f082b219"
+        };
+
+        // Инициализируем глобально, чтобы cloud-logic.js это видел
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        window.auth = firebase.auth();
+        window.db = firebase.database();
+    </script>
+
     <style>
-        /* Стили экрана входа */
         #auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0f172a; display: flex; align-items: center; justify-content: center;
@@ -36,8 +55,9 @@
         }
         .btn-primary {
             width: 100%; padding: 16px; background: #38bdf8; color: #0f172a;
-            border: none; border-radius: 12px; font-weight: 800; cursor: pointer;
+            border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s;
         }
+        .btn-primary:active { transform: scale(0.98); }
         .btn-google {
             width: 100%; padding: 12px; background: #fff; color: #000;
             border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -54,20 +74,27 @@
 </head>
 <body>
 
+    <!-- ЭКРАН АВТОРИЗАЦИИ -->
     <div id="auth-overlay">
         <div class="auth-card">
             <h2 style="color:#38bdf8; margin-bottom:20px; font-weight:900;">ПДД КР 2026</h2>
+            
             <button class="btn-google" onclick="handleGoogleAuth()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Вход через Google
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+                Вход через Google
             </button>
+
             <div style="margin:15px; color:#475569; font-size:10px; font-weight:800;">ИЛИ ПОЧТА</div>
+
             <input type="email" id="auth-email" class="auth-input" placeholder="Email">
             <input type="password" id="auth-pass" class="auth-input" placeholder="Пароль">
+            
             <button class="btn-primary" onclick="handleEmailAuth()">ВОЙТИ / СОЗДАТЬ</button>
             <p id="auth-error" style="color:#f43f5e; font-size:11px; margin-top:15px; font-weight:600;"></p>
         </div>
     </div>
 
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div id="main-app-wrapper">
         <header class="top-bar">
             <div style="display:flex; gap:8px; align-items:center;">
@@ -77,41 +104,25 @@
             <div class="user-label" id="user-display-name"></div>
             <div id="timer-display" style="font-weight:900; color:#38bdf8; font-size:16px;">25:00</div>
         </header>
+        
         <main id="app"></main>
     </div>
 
-    <!-- 3. ЛОГИКА (ОБЯЗАТЕЛЬНО В ЭТОМ ПОРЯДКЕ) -->
+    <!-- ЛОГИКА ПРИЛОЖЕНИЯ -->
     <script type="module">
-        // Импортируем облачную логику (она должна использовать уже инициализированный firebase)
         import { initCloudApp } from './assets/cloud-logic.js';
 
-        const firebaseConfig = {
-          apiKey: "AIzaSyCWpx351vaBx5dtNubE2EKI3LHdhO-NDCs",
-          authDomain: "pdd-kg-local.firebaseapp.com",
-          databaseURL: "https://pdd-kg-local-default-rtdb.firebaseio.com",
-          projectId: "pdd-kg-local",
-          storageBucket: "pdd-kg-local.firebasestorage.app",
-          messagingSenderId: "975775800028",
-          appId: "1:975775800028:web:9b036c419cc4d1f082b219"
-        };
-
-        // Инициализируем приложение ПЕРЕД вызовом любых функций
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const auth = firebase.auth();
-
-        // Экспортируем функции в глобальное окно (window), чтобы onclick в HTML их видел
+        // Делаем функции глобальными, чтобы onclick в HTML их видел
         window.handleEmailAuth = async () => {
             const email = document.getElementById('auth-email').value;
             const pass = document.getElementById('auth-pass').value;
             const errBox = document.getElementById('auth-error');
             try {
-                await auth.signInWithEmailAndPassword(email, pass);
+                await window.auth.signInWithEmailAndPassword(email, pass);
             } catch (e) {
                 if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
                     try {
-                        await auth.createUserWithEmailAndPassword(email, pass);
+                        await window.auth.createUserWithEmailAndPassword(email, pass);
                     } catch (regErr) { errBox.innerText = regErr.message; }
                 } else { errBox.innerText = e.message; }
             }
@@ -119,15 +130,15 @@
 
         window.handleGoogleAuth = async () => {
             const provider = new firebase.auth.GoogleAuthProvider();
-            try { await auth.signInWithPopup(provider); } catch(e) { console.error(e); }
+            try { await window.auth.signInWithPopup(provider); } catch(e) { console.error(e); }
         };
 
         window.logout = () => {
-            if(confirm("Выйти?")) auth.signOut().then(() => location.reload());
+            if(confirm("Выйти из аккаунта?")) window.auth.signOut().then(() => location.reload());
         };
 
         // Слушатель состояния входа
-        auth.onAuthStateChanged(user => {
+        window.auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 document.getElementById('main-app-wrapper').style.display = 'flex';
@@ -136,8 +147,8 @@
                 if (!window.location.hash || window.location.hash === '#/') {
                     window.location.hash = '#/debug';
                 }
-                
-                // Инициализация тренажера ошибок
+
+                // Запуск логики из cloud-logic.js
                 initCloudApp(user.uid);
             } else {
                 document.getElementById('auth-overlay').style.display = 'flex';
@@ -146,7 +157,7 @@
         });
     </script>
 
-    <!-- 4. ОСНОВНОЙ ДВИЖОК САЙТА (Загружается в конце) -->
+    <!-- Подключаем основной движок сайта в самом конце -->
     <script type="module" src="./assets/index.js"></script>
 </body>
 </html>
