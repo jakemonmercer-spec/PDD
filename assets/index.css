@@ -1,249 +1,160 @@
 /* 
-   PDD ULTIMATE TOTAL STYLESHEET 2026
-   Theme: Midnight Slate & Cyber Blue (Universal Soft Dark)
-   Targets: All screens, Mobile-First, Cloud Logic UI
+   PDD TOTAL REBOOT 2026 
+   Style: Professional Soft Dark / Universal
+   Fixes: Pagination colors, giant images, mobile centering
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
     --bg: #0f172a;           /* Глубокий полночный */
-    --bg-gradient: linear-gradient(180deg, #0f172a 0%, #020617 100%);
     --surface: #1e293b;      /* Цвет карточек */
     --surface-light: #334155; /* Подсветка */
-    --primary: #38bdf8;      /* Небесно-голубой акцент */
-    --primary-glow: rgba(56, 189, 248, 0.3);
-    --text: #f1f5f9;         /* Основной текст */
-    --text-muted: #94a3b8;   /* Приглушенный */
-    --border: #334155;       /* Линии разграничения */
-    --success: #10b981;      /* Изумрудный для правильных ответов */
-    --danger: #f43f5e;       /* Розовый для ошибок */
-    --radius-xl: 20px;
-    --radius-lg: 16px;
-    --radius-md: 12px;
+    --primary: #38bdf8;      /* Голубой акцент */
+    --text: #f1f5f9;         /* Текст */
+    --text-muted: #94a3b8;   /* Приглушенный текст */
+    --border: #334155;       /* Границы */
+    --success: #10b981 !important; /* Зеленый (ВАЖНО !important) */
+    --danger: #f43f5e !important;  /* Красный (ВАЖНО !important) */
+    --radius: 16px;
 }
 
-/* 1. ГЛОБАЛЬНЫЙ СБРОС */
+/* 1. БАЗОВЫЙ СБРОС */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
-    outline: none;
 }
 
 html, body {
     height: 100%;
     width: 100%;
     background-color: var(--bg);
-    background: var(--bg-gradient);
     color: var(--text);
-    font-family: 'Inter', -apple-system, sans-serif;
-    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
-/* Кастомный скроллбар (тонкий) */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: var(--surface-light); border-radius: 10px; }
-
-/* 2. ГЛАВНАЯ ОБОЛОЧКА APP */
+/* 2. ГЛАВНАЯ ОБОЛОЧКА */
 #app {
     width: 100%;
-    max-width: 600px; /* Идеально для телефонов и центровки на ПК */
+    max-width: 600px; /* Зажимаем контент для ПК и больших телефонов */
     margin: 0 auto;
-    min-height: calc(100vh - 60px);
-    padding: 15px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    position: relative;
+    min-height: 100vh;
 }
 
-/* 3. ЭКРАН ПРИВЕТСТВИЯ И ГЛАВНОЕ МЕНЮ */
+/* 3. ШАПКА (Навигация) */
+.game-header, .top-bar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    height: 55px;
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center;
+    padding: 0 15px;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border);
+}
+
+#app { margin-top: 55px !important; } /* Отступ под шапку */
+
+/* 4. ГЛАВНЫЙ ЭКРАН (МЕНЮ) */
 .div_welcome_page {
     width: 100% !important;
     display: flex !important;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    padding-top: 10px;
 }
 
 .logo_main1 {
-    width: clamp(100px, 25vw, 140px) !important;
+    width: 130px !important;
     height: auto !important;
-    margin: 10px auto 20px !important;
-    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+    margin: 20px auto !important;
 }
 
-.title_main2 {
-    color: var(--primary);
-    font-weight: 800;
-    font-size: clamp(1.1rem, 5vw, 1.5rem);
-    margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Кнопки выбора режимов (Тест, Марафон и т.д.) */
 .test-mode-link {
     display: block !important;
     width: 100% !important;
     background: var(--surface) !important;
-    color: var(--text) !important;
     border: 1px solid var(--border) !important;
-    padding: clamp(14px, 4vh, 20px) !important;
-    margin-bottom: 12px !important;
-    border-radius: var(--radius-lg) !important;
+    color: var(--text) !important;
+    padding: 18px !important;
+    margin-bottom: 10px !important;
+    border-radius: var(--radius) !important;
     text-decoration: none !important;
     font-weight: 700 !important;
-    font-size: 1rem !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
-    text-align: center;
+    text-align: center !important;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
 }
 
-.test-mode-link:hover {
-    background: var(--surface-light) !important;
-    border-color: var(--primary) !important;
-    transform: translateY(-2px);
-}
-
-/* 4. СЕТКА ТЕМ И БИЛЕТОВ */
-.cards { width: 100% !important; }
-.card-container {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
-    gap: 10px !important;
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* Для списка тем делаем шире */
-.cards.mode-topics .card-container {
-    grid-template-columns: 1fr 1fr !important;
-}
-
-.card {
-    background: var(--surface) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 12px 5px !important;
-    text-align: center;
-    color: var(--text) !important;
-    font-weight: 600;
-    transition: 0.2s;
-}
-
-.card:hover { border-color: var(--primary) !important; background: var(--surface-light) !important; }
-
-/* 5. ЭКРАН ТЕСТА (ВОПРОСЫ) */
-.container {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column;
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Изображение вопроса */
+/* 5. ЭКРАН ВОПРОСА */
 .main-img {
     width: 100% !important;
-    max-height: clamp(160px, 35vh, 280px) !important;
+    max-height: clamp(180px, 35vh, 280px) !important;
     object-fit: contain;
     background: #000;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     border: 2px solid var(--border);
-    margin: 0 auto 15px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin: 10px 0 20px !important;
 }
 
-/* Текст самого вопроса */
 .question-title {
-    font-size: clamp(0.95rem, 4vw, 1.1rem) !important;
+    font-size: 1.05rem !important;
     font-weight: 700 !important;
-    color: var(--text) !important;
     margin-bottom: 20px !important;
-    line-height: 1.4;
     text-align: left !important;
-    padding: 0 5px;
+    line-height: 1.4;
 }
 
-/* Список ответов */
-.question-content {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column;
-    gap: 10px;
-    padding-bottom: 20px;
-}
-
+/* Кнопки ответов */
 .question-item {
     background: var(--surface) !important;
     border: 1.5px solid var(--border) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 14px 18px !important;
-    font-size: 0.95rem !important;
-    color: var(--text) !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    margin-bottom: 10px !important;
+    cursor: pointer;
     display: flex !important;
     align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    transition: 0.2s;
+    color: var(--text) !important;
 }
 
-/* Состояния ответов */
-.question-item.active {
-    border-color: var(--primary) !important;
-    background: rgba(56, 189, 248, 0.1) !important;
-    box-shadow: 0 0 15px var(--primary-glow);
-}
+.question-item.active { border-color: var(--primary) !important; background: rgba(56, 189, 248, 0.1) !important; }
 
-.question-item.valid {
-    background: rgba(16, 185, 129, 0.15) !important;
-    border-color: var(--success) !important;
-    color: var(--success) !important;
-    font-weight: 700;
-}
+/* 6. ЦВЕТА ПРАВИЛЬНО / НЕПРАВИЛЬНО (В ТЕСТЕ) */
+.question-item.valid { background: rgba(16, 185, 129, 0.2) !important; border-color: var(--success) !important; }
+.question-item.invalid { background: rgba(244, 63, 94, 0.2) !important; border-color: var(--danger) !important; }
 
-.question-item.invalid {
-    background: rgba(244, 63, 94, 0.15) !important;
-    border-color: var(--danger) !important;
-    color: var(--danger) !important;
-    font-weight: 700;
-}
-
-/* 6. КНОПКИ УПРАВЛЕНИЯ (ОТВЕТИТЬ / ДАЛЕЕ) */
+/* 7. КНОПКА ОТВЕТИТЬ */
 .answer-btn, .button_main {
     width: 100% !important;
     background: var(--primary) !important;
     color: var(--bg) !important;
     padding: 18px !important;
-    border-radius: var(--radius-md) !important;
+    border-radius: 14px !important;
     font-weight: 800 !important;
     font-size: 1.1rem !important;
     border: none !important;
-    margin-top: 10px;
+    margin: 20px 0 !important;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.2);
-    transition: all 0.1s ease;
 }
 
-.answer-btn:active { transform: scale(0.98); opacity: 0.9; }
-
-/* 7. ПАГИНАЦИЯ (НОМЕРА ВОПРОСОВ ВНИЗУ) */
+/* 8. ГЛАВНЫЙ ФИКС ПАГИНАЦИИ (Цифры внизу) */
 ul#componentContainer {
     display: flex !important;
-    flex-direction: row !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
+    gap: 6px !important;
     list-style: none !important;
-    gap: 8px !important;
-    margin: 25px 0 !important;
-    padding: 0 !important;
+    padding: 20px 0 !important;
     width: 100% !important;
 }
 
@@ -261,80 +172,42 @@ ul#componentContainer li { list-style: none !important; }
     font-size: 12px !important;
     font-weight: 700 !important;
     color: var(--text-muted) !important;
-    transition: 0.2s;
 }
 
-/* Цвета для пагинации (правильно/неправильно) */
-.pagination-item.active-page {
-    background: var(--primary) !important;
-    color: var(--bg) !important;
+/* ОКРАШИВАНИЕ ЦИФР ПО РЕЗУЛЬТАТУ */
+.pagination-item.active-page { background: var(--primary) !important; color: var(--bg) !important; }
+
+/* Если родитель (li) получил класс от движка, красим внутреннюю кнопку */
+li.valid .pagination-item, .pagination-item.is-correct, .pagination-item.valid {
+    background-color: var(--success) !important;
+    color: white !important;
     border: none !important;
 }
 
-.pagination-item.is-correct {
-    background: var(--success) !important;
-    color: #fff !important;
+li.invalid .pagination-item, .pagination-item.is-wrong, .pagination-item.invalid {
+    background-color: var(--danger) !important;
+    color: white !important;
     border: none !important;
 }
 
-.pagination-item.is-wrong {
-    background: var(--danger) !important;
-    color: #fff !important;
-    border: none !important;
+/* 9. СКРЫТИЕ МУСОРА */
+.stylish_line1, .stylish_line2, .welcome_page_spacer, br, .main-line, li::before, .question-item input {
+    display: none !important;
 }
 
-/* 8. ТРЕНАЖЕР ОШИБОК (CLOUD LOGIC UI) */
-.explanation-box {
-    background: var(--surface) !important;
-    padding: 15px;
-    border-radius: var(--radius-md);
-    margin-top: 15px;
-    border-left: 4px solid var(--primary);
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-.progress-mini {
-    width: 100%;
-    height: 6px;
-    background: var(--surface-light);
-    border-radius: 10px;
-    margin-bottom: 15px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: var(--primary);
-    box-shadow: 0 0 10px var(--primary-glow);
-}
-
-/* 9. СКРЫТИЕ МУСОРА ОРИГИНАЛА */
-.stylish_line1, 
-.stylish_line2, 
-.welcome_page_spacer, 
-br, 
-.main-line, 
-li::before,
-.question-item input[type="radio"],
-.header .language { 
-    display: none !important; 
-}
-
-/* 10. АДАПТАЦИЯ ПОД МИКРО-ЭКРАНЫ (320px - 360px) */
+/* 10. АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ */
 @media (max-width: 360px) {
-    #app { padding: 10px; }
     .pagination-item { width: 30px !important; height: 30px !important; font-size: 11px !important; }
-    .card-container { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)) !important; }
-    .test-mode-link { padding: 15px !important; font-size: 0.95rem !important; }
     .question-title { font-size: 0.95rem !important; }
 }
 
-/* 11. ФИКС ДЛЯ ПК (Центровка контента) */
-@media (min-width: 601px) {
-    body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+/* 11. ПОЯСНЕНИЕ К ВОПРОСУ */
+.question-explanation {
+    background: var(--surface) !important;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border-left: 5px solid var(--primary);
+    font-size: 13px;
+    line-height: 1.5;
 }
