@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ПДД КР 2026 | Cloud Edition</title>
     
-    <!-- Фикс для движка: определяем _log до загрузки всего остального -->
-    <script>window._log = console.log;</script>
+    <!-- 1. ГЛОБАЛЬНЫЕ ФИКСЫ (Должны быть первыми) -->
+    <script>
+        window._log = console.log; // Фикс для движка index.js
+    </script>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/index.css">
     
-    <!-- Firebase SDK (Compat) -->
+    <!-- 2. Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
 
     <style>
+        /* Стили экрана входа */
         #auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0f172a; display: flex; align-items: center; justify-content: center;
@@ -33,9 +36,8 @@
         }
         .btn-primary {
             width: 100%; padding: 16px; background: #38bdf8; color: #0f172a;
-            border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s;
+            border: none; border-radius: 12px; font-weight: 800; cursor: pointer;
         }
-        .btn-primary:active { transform: scale(0.98); }
         .btn-google {
             width: 100%; padding: 12px; background: #fff; color: #000;
             border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -78,8 +80,9 @@
         <main id="app"></main>
     </div>
 
-    <!-- Firebase и основная логика -->
+    <!-- 3. ЛОГИКА (ОБЯЗАТЕЛЬНО В ЭТОМ ПОРЯДКЕ) -->
     <script type="module">
+        // Импортируем облачную логику (она должна использовать уже инициализированный firebase)
         import { initCloudApp } from './assets/cloud-logic.js';
 
         const firebaseConfig = {
@@ -92,11 +95,13 @@
           appId: "1:975775800028:web:9b036c419cc4d1f082b219"
         };
 
-        // 1. Сначала инициализация
-        firebase.initializeApp(firebaseConfig);
+        // Инициализируем приложение ПЕРЕД вызовом любых функций
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const auth = firebase.auth();
 
-        // 2. Привязываем функции к window, чтобы кнопки в HTML их видели
+        // Экспортируем функции в глобальное окно (window), чтобы onclick в HTML их видел
         window.handleEmailAuth = async () => {
             const email = document.getElementById('auth-email').value;
             const pass = document.getElementById('auth-pass').value;
@@ -121,7 +126,7 @@
             if(confirm("Выйти?")) auth.signOut().then(() => location.reload());
         };
 
-        // 3. Слушатель авторизации
+        // Слушатель состояния входа
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('auth-overlay').style.display = 'none';
@@ -132,7 +137,7 @@
                     window.location.hash = '#/debug';
                 }
                 
-                // Запуск облачной логики из твоего JS файла
+                // Инициализация тренажера ошибок
                 initCloudApp(user.uid);
             } else {
                 document.getElementById('auth-overlay').style.display = 'flex';
@@ -141,7 +146,7 @@
         });
     </script>
 
-    <!-- Основной движок сайта -->
+    <!-- 4. ОСНОВНОЙ ДВИЖОК САЙТА (Загружается в конце) -->
     <script type="module" src="./assets/index.js"></script>
 </body>
 </html>
